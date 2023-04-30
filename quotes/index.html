@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quotes</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <!-- <link
+      href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css"
+      rel="stylesheet"
+    />  -->
+  </head>
+  <body>
+    <div id="container" data-aos="zoom-in">
+      <i class="fa-sharp fa-solid fa-quote-left" id="quoteLogo"></i>
+      <div id="quotes" data-aos="zoom-in"></div>
+      <div id="author" data-aos="zoom-in"></div>
+      <button id="buttonChange" onclick="getQuotes()">new Quotes</button>
+      <button id="tweet">
+        <i
+          class="fa-brands fa-twitter"
+          style="color: #1da1f2"
+          title="Tweet Me"
+        ></i>
+      </button>
+    </div>
+  </body>
+  <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+  <script>
+    let quotes = "";
+    AOS.init();
+    const tweet = document.getElementById("tweet");
+    const quote = document.getElementById("quotes");
+    const author = document.getElementById("author");
+    const api = "https://type.fit/api/quotes";
+
+    const getNewQuotes = (randomNum) => {
+      quote.innerHTML = `${quotes[randomNum].text}`;
+      if (quotes[randomNum].author == null) {
+        author.innerText = `Unknown`;
+      }
+      author.innerText = `By ${quotes[randomNum].author}`;
+    };
+    const getQuotes = async () => {
+      try {
+        const response = await fetch(api);
+        quotes = await response.json();
+        getNewQuotes(getRandomInt(0, quotes.length - 1));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getQuotes();
+
+    function getRandomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1) + min);
+    }
+
+    tweet.addEventListener("click", () => {
+      console.log(quote.innerHTML);
+      window.open(
+        "https://twitter.com/intent/tweet?text=" + `${quote.innerHTML}`
+      );
+    });
+  </script>
+</html>
